@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['web', 'verified'])->name('dashboard');
 
-Route::get('/map', [MapController::class,"mapPage"])->middleware(['auth', 'verified'])->name('map');
+Route::get('/map', [MapController::class,"mapPage"])->middleware(['web', 'verified'])->name('map');
+Route::get('/MapContent', [MapController::class,"getData"])->middleware(['web', 'verified'])->name('mapContent');
 //Route::get('/dashboard', function () {
 //    return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
