@@ -12,10 +12,13 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.js" integrity="sha256-IEu6zucUm+jG4fW0dyxg1kMbNLC46fXbwnIJL53rt3I=" crossorigin="anonymous"></script>
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- 新 Bootstrap5 核心 CSS 文件 -->
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css">
+        <!--  popper.min.js 用于弹窗、提示、下拉菜单 -->
+        <script src="https://cdn.staticfile.org/popper.js/2.9.3/umd/popper.min.js"></script>
+        <!-- 最新的 Bootstrap5 核心 JavaScript 文件 -->
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">

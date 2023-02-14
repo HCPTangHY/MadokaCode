@@ -6,38 +6,51 @@
         html, body {
             margin: 0px;
         }
-
         canvas {
-            {{--background-image: url({{asset('storage/img/map.png')}});--}}
-            color: #000000;
+            background-image: url('storage/img/background.png');
+            background-color: #000000;
         }
     </style>
-    <script type="application/javascript" src="{{asset('js/map.js')}}">
-
-    </script>
+    <script type="application/javascript" src="{{asset('js/map.js')}}"></script>
+    @include('components.header')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
 <div class="container">
     @for($i=0; $i < count($stars); $i++)
         @php
+            $ownerColor = '#ffffff';
+            $ownerName = '';
+            $controllerColor = '#ffffff';
+            $controllerName = '';
             $x = $stars[$i]['x']*3+960;
             $y = $stars[$i]['y']*3+960;
-			$country = $stars[$i]['owner'];
-			$type = $stars[$i]['type'];
+            $country = $stars[$i]['owner'];
+            $controller = $stars[$i]['controller'];
+            $type = $stars[$i]['type'];
         @endphp
         @foreach($countrys as $key => $value)
             @if($value['tag'] == $country)
                 @php
-                    $countryColor = $value['color'];
-					$countryName = $value['name'];
+                    $ownerColor = $value['color'];
+					$ownerName = $value['name'];
+                @endphp
+            @endif
+        @endforeach
+        @foreach($countrys as $key => $value)
+            @if($value['tag'] == $controller)
+                @php
+                    $controllerColor = $value['color'];
+                    $controllerName = $value['name'];
                 @endphp
             @endif
         @endforeach
         @if ($country == '')
             @php
-                $countryColor = '#ffffff';
-				$countryName = '';
+                $ownerColor = '#ffffff';
+				$ownerName = '';
+                $controllerColor = '#ffffff';
+                $controllerName = '';
             @endphp
         @endif
         @if ($privilege == 0 || $privilege == 1)
@@ -69,11 +82,19 @@
 {{--                    @endfor--}}
 {{--                </ul>--}}
 {{--            @endif--}}
-            <button type='button' class='btn btn-default dropdown-toggle'
+            <button type='button' class='btn btn-default'
                     style='position: absolute;
                             top: {{$y-13.75}}px; left: {{$x-13.75}}px; width: 27.5px;height: 27.5px;
                             border-radius: 100%;
-                            background-color:{{$countryColor}};
+                            background-color:{{$controllerColor}};
+                            border:none ;
+                            padding:0px 0px'>
+            </button>
+            <button type='button' class='btn btn-default dropdown-toggle'
+                    style='position: absolute;
+                            top: {{$y-11}}px; left: {{$x-11}}px; width: 22px;height: 22px;
+                            border-radius: 100%;
+                            background-color:{{$ownerColor}};
                             border:none ;
                             padding:0px 0px'
                     id='MenuLink-{{$stars[$i]['id']}}' data-bs-toggle='dropdown' aria-expanded='false'
@@ -81,21 +102,21 @@
                 @if($type == 'sc_black_hole' || $type == 'sc_pulsar' || $type == 'sc_neutron_star')
                     <img src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
                 @endif
-{{--                @if($stars[$i]['havePlanet'] == 1)--}}
-{{--                    @php--}}
-{{--                        $ownered = False;--}}
-{{--                        foreach ($planets as $planet) {--}}
-{{--							if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {--}}
-{{--                                $ownered = true;--}}
-{{--                                $countryImg = $planet['controller'];--}}
-{{--                                break;--}}
-{{--							}--}}
-{{--                        }--}}
-{{--                    @endphp--}}
-{{--                    @if ($ownered)--}}
-{{--                        <img src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />--}}
-{{--                    @endif--}}
-{{--                @endif--}}
+                {{--                @if($stars[$i]['havePlanet'] == 1)--}}
+                {{--                    @php--}}
+                {{--                        $ownered = False;--}}
+                {{--                        foreach ($planets as $planet) {--}}
+                {{--							if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {--}}
+                {{--                                $ownered = true;--}}
+                {{--                                $countryImg = $planet['controller'];--}}
+                {{--                                break;--}}
+                {{--							}--}}
+                {{--                        }--}}
+                {{--                    @endphp--}}
+                {{--                    @if ($ownered)--}}
+                {{--                        <img src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />--}}
+                {{--                    @endif--}}
+                {{--                @endif--}}
             </button>
             <ul class='dropdown-menu' aria-labelledby='MenuLink-{{$stars[$i]['id']}}' id='star-{{$stars[$i]['id']}}'>
                 <li><a class='dropdown-item' onclick='changeOwner({{$stars[$i]['id']}},"")'>无</a></li>
@@ -135,9 +156,17 @@
 {{--            @endif--}}
             <button type='button' class='btn btn-default'
                     style='position: absolute;
-                    top: {{$y-13.75}}px; left: {{$x-13.75}}px; width: 27.5px;height: 27.5px;
+                            top: {{$y-13.75}}px; left: {{$x-13.75}}px; width: 27.5px;height: 27.5px;
+                            border-radius: 100%;
+                            background-color:{{$controllerColor}};
+                            border:none ;
+                            padding:0px 0px'>
+            </button>
+            <button type='button' class='btn btn-default'
+                    style='position: absolute;
+                    top: {{$y-11}}px; left: {{$x-11}}px; width: 22px;height: 22px;
                     border-radius: 100%;
-                    background-color:{{$countryColor}};
+                    background-color:{{$ownerColor}};
                     border:none ;
                     padding:0px 0px'
                     data-bs-toggle='popover'
@@ -146,7 +175,7 @@
                     data-bs-container ='body'
                     title={{$stars[$i]['name']}}
                               data-bs-html='true'
-                    data-bs-content='当前受控于{{$countryName}}
+                    data-bs-content='归属于{{$ownerName}},当前受控于{{$controllerName}}
                               <p>本星系包含
                                 @foreach($stars[$i]['resource'] as $res=>$value)
                                     @if($value == 0)
@@ -247,7 +276,7 @@
 {{--        @endforeach--}}
     @endfor
 </div>
-<canvas id="canvas_1">
+<canvas id="canvas_1" >
     <h1>您的浏览器不支持canvas, 请升级后重新访问</h1>
 </canvas>
 <script type="text/javascript">
@@ -264,28 +293,28 @@
             $stars[$i]['hyperlane'] = json_decode($stars[$i]['hyperlane'],true);
         @endphp
         ctx.lineWidth = 3;
-    ctx.strokeStyle = '#66d1ff';
-    @foreach ($stars[$i]['hyperlane'] as $key => $value)
-    ctx.beginPath();
-    ctx.moveTo({{$x}}, {{$y}});
-    ctx.lineTo({{$stars[$value["to"]]['x'] * 3 + 960}}, {{$stars[$value["to"]]['y'] * 3 + 960}});
-    ctx.closePath();
-    ctx.stroke();
-    @endforeach
-        @endfor
-        @for ($i=0; $i < count($stars); $i++)
+        ctx.strokeStyle = '#66d1ff';
+        @foreach ($stars[$i]['hyperlane'] as $key => $value)
+        ctx.beginPath();
+        ctx.moveTo({{$x}}, {{$y}});
+        ctx.lineTo({{$stars[$value["to"]]['x'] * 3 + 960}}, {{$stars[$value["to"]]['y'] * 3 + 960}});
+        ctx.closePath();
+        ctx.stroke();
+        @endforeach
+    @endfor
+    @for ($i=0; $i < count($stars); $i++)
         @php
             $x = $stars[$i]['x']*3+960;
             $y = $stars[$i]['y']*3+960;
         @endphp
         ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc({{$x}}, {{$y}}, 13.75, 0, 20 * Math.PI);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = 'white';
-    ctx.fillText('{{$stars[$i]['name']}}', {{$x -22.5}}, {{$y +25}});
+        ctx.beginPath();
+        ctx.arc({{$x}}, {{$y}}, 13.75, 0, 20 * Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = 'white';
+        ctx.fillText('{{$stars[$i]['name']}}', {{$x -22.5}}, {{$y +25}});
     @endfor
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

@@ -20,8 +20,8 @@ Route::get('/', function () {
 
 Route::get('/map', [MapController::class,"mapPage"])->middleware(['web', 'verified'])->name('map');
 Route::get('/MapContent', [MapController::class,"getData"])->middleware(['web', 'verified'])->name('mapContent');
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';

@@ -17,7 +17,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        Session::save();
         return view('auth.login');
     }
 
