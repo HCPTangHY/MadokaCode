@@ -183,7 +183,7 @@
                                     @endif
                                     <span class="badge bg-light text-dark"><img src="storage/img/resource/{{$res}}.png"/ width="20px">{{$value}}</span>
                                 @endforeach
-                              </p>'>
+                              </p>' onclick="readStar({{$stars[$i]['id']}})">
                 @if($type == 'sc_black_hole' || $type == 'sc_pulsar' || $type == 'sc_neutron_star')
                     <img src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
                 @endif
@@ -307,10 +307,30 @@
             $x = $stars[$i]['x']*3+960;
             $y = $stars[$i]['y']*3+960;
         @endphp
+        @foreach($countrys as $key => $value)
+            @if($value['tag'] == $stars[$i]['owner'])
+                @php
+                    $ownerColor = $value['color'];
+                @endphp
+            @endif
+        @endforeach
+        @foreach($countrys as $key => $value)
+            @if($value['tag'] == $stars[$i]['controller'])
+                @php
+                    $controllerColor = $value['color'];
+                @endphp
+            @endif
+        @endforeach
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc({{$x}}, {{$y}}, 13.75, 0, 20 * Math.PI);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '{{$controllerColor}}';
+        ctx.fill();
+        ctx.stroke();
+        ctx.lineWidth = 0;
+        ctx.beginPath();
+        ctx.arc({{$x}}, {{$y}}, 11, 0, 20 * Math.PI);
+        ctx.fillStyle = '{{$ownerColor}}';
         ctx.fill();
         ctx.stroke();
         ctx.fillStyle = 'white';
@@ -321,10 +341,44 @@
         return new bootstrap.Popover(popoverTriggerEl)
     })
 </script>
-<footer class="fixed-bottom">
-    <div class="container-fluid">
-
+<div class="modal fade" id="starModal" tabindex="-1" aria-labelledby="starModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="starController" style="display: inline"></div>
+                <h4 class="modal-title" style="display: inline" id="starName"></h4>
+                归属于<div id="starOwner" style="display: inline"></div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container my-4 py-4 rounded shadow-lg" id="station"></div>
+                <div class="container my-4 py-4 rounded shadow-lg">
+                    <div class="row">
+                        <div class="col my-4 py-4">
+                            <h6 class="text-center">本星系包含资源</h6>
+                            <div class="container my-4">
+                                <div id="resource"></div>
+                            </div>
+                        </div>
+                        <div class="col my-4 py-4">
+                            <h6 class="text-center">本星系包含修正</h6>
+                            <div class="container my-4">
+                                <div class="row" id="modifier"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="adminButton"></div>
+                @if($privilege != 3)
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="buildArmy()">招募陆军</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#newDistrictModal" data-bs-toggle="modal" data-bs-dismiss="modal">新建区划</button>
+                @endif
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-</footer>
+</div>
 </body>
 </html>

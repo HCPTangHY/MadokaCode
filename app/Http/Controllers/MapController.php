@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\Star;
+use App\Models\Station;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,5 +47,19 @@ class MapController extends Controller
         }else {
 //            return redirect("https://kanade.nbmun.cn");
         }
+    }
+    public function readStar(Request $request) {
+        $privilege = Auth::user()->privilege;
+        $country = Auth::user()->country;
+        $id = $request->input('id');
+        $star = Star::where(["id"=>$id])->get()->toArray();
+        $star[0]['resource'] = json_decode($star[0]['resource']);
+        $station = Station::where(['position'=>$id])->get()->toArray();
+        if (count($station)==0) {
+            $station[0] = 0;
+        }
+        $data = ['star'=>$star[0],'station'=>$station[0]];
+        $data = json_encode($data,JSON_UNESCAPED_UNICODE);
+        return $data;
     }
 }

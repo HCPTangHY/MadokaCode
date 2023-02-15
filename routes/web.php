@@ -18,13 +18,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('dashboard');
 })->middleware(['web', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/map', [MapController::class,"mapPage"])->middleware(['web', 'verified'])->name('map');
 Route::get('/MapContent', [MapController::class,"getData"])->middleware(['web', 'verified'])->name('mapContent');
 Route::get('/planet',[PlanetController::class,"planetPage"])->middleware(['web', 'verified'])->name('planet');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix("Action")->group(function () {
+    Route::post('/ReadStar',[MapController::class,"readStar"])->middleware(['web', 'verified']);
+});
 
 require __DIR__.'/auth.php';
