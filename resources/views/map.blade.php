@@ -11,8 +11,8 @@
             background-color: #000000;
         }
     </style>
-    <script type="application/javascript" src="{{asset('js/map.js')}}"></script>
     @include('components.header')
+    <script type="application/javascript" src="{{asset('js/map.js')}}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
@@ -276,11 +276,12 @@
 {{--        @endforeach--}}
     @endfor
 </div>
-<canvas id="canvas_1" >
+<canvas id="galaxyMap" >
     <h1>您的浏览器不支持canvas, 请升级后重新访问</h1>
 </canvas>
+<script type="application/javascript" src="{{asset('js/mapgenerator.js')}}"></script>
 <script type="text/javascript">
-    var canvas_1 = document.getElementById("canvas_1");
+    var canvas_1 = document.getElementById("galaxyMap");
     var ctx = canvas_1.getContext("2d");
     canvas_1.width = "1920";
     canvas_1.height = "1920";

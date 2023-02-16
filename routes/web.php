@@ -27,6 +27,7 @@ Route::get('/MapContent', [MapController::class,"getData"])->middleware(['web', 
 Route::get('/planet',[PlanetController::class,"planetPage"])->middleware(['web', 'verified'])->name('planet');
 
 Route::prefix("Action")->group(function () {
+    Route::post('/MapData',[MapController::class,"mapData"])->middleware(['web', 'verified']);
     Route::post('/ReadStar',[MapController::class,"readStar"])->middleware(['web', 'verified']);
 });
 

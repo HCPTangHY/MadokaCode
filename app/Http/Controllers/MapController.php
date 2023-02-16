@@ -62,4 +62,10 @@ class MapController extends Controller
         $data = json_encode($data,JSON_UNESCAPED_UNICODE);
         return $data;
     }
+    public function mapData(Request $request) {
+        $star = Star::get()->toArray();
+        $country = Country::get()->toArray();
+        $data = json_encode(["star"=>$star,"country"=>$country],JSON_UNESCAPED_UNICODE);
+        return $data;
+    }
 }
