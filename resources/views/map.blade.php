@@ -7,7 +7,7 @@
             margin: 0px;
         }
         canvas {
-            background-image: url('storage/img/background.png');
+            /*background-image: url('storage/img/background.png');*/
             background-color: #000000;
         }
     </style>
@@ -353,6 +353,7 @@
             </div>
             <div class="modal-body">
                 <div class="container my-4 py-4 rounded shadow-lg" id="station"></div>
+                <div class="container my-4 py-4 rounded shadow-lg" id="planet"></div>
                 <div class="container my-4 py-4 rounded shadow-lg">
                     <div class="row">
                         <div class="col my-4 py-4">

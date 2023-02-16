@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Models\Planet;
 use App\Models\Star;
 use App\Models\Station;
+use App\Models\StationType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,8 +59,14 @@ class MapController extends Controller
         $station = Station::where(['position'=>$id])->get()->toArray();
         if (count($station)==0) {
             $station[0] = 0;
+        } else {
+            $station[0]['level'] = StationType::where(['level'=>$station[0]['level']])->first()->localization;
         }
-        $data = ['star'=>$star[0],'station'=>$station[0]];
+        $planet = Planet::where(['position'=>$id])->get()->toArray();
+        if (count($planet)==0) {
+            $planet = 0;
+        }
+        $data = ['star'=>$star[0],'station'=>$station[0],'planet'=>$planet];
         $data = json_encode($data,JSON_UNESCAPED_UNICODE);
         return $data;
     }
@@ -69,3 +77,4 @@ class MapController extends Controller
         return $data;
     }
 }
+
