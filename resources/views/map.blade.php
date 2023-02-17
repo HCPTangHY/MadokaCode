@@ -100,23 +100,23 @@
                     id='MenuLink-{{$stars[$i]['id']}}' data-bs-toggle='dropdown' aria-expanded='false'
                     data-bs-target='#star-{{$stars[$i]['id']}}'>
                 @if($type == 'sc_black_hole' || $type == 'sc_pulsar' || $type == 'sc_neutron_star')
-                    <img src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
+                    <img style='position: relative; top: -2.5px; left: -2.5px;' src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
                 @endif
-                {{--                @if($stars[$i]['havePlanet'] == 1)--}}
-                {{--                    @php--}}
-                {{--                        $ownered = False;--}}
-                {{--                        foreach ($planets as $planet) {--}}
-                {{--							if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {--}}
-                {{--                                $ownered = true;--}}
-                {{--                                $countryImg = $planet['controller'];--}}
-                {{--                                break;--}}
-                {{--							}--}}
-                {{--                        }--}}
-                {{--                    @endphp--}}
-                {{--                    @if ($ownered)--}}
-                {{--                        <img src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />--}}
-                {{--                    @endif--}}
-                {{--                @endif--}}
+                @if($stars[$i]['havePlanet'] == 1)
+                    @php
+                        $ownered = False;
+                        foreach ($planets as $planet) {
+                            if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {
+                                $ownered = true;
+                                $countryImg = $planet['controller'];
+                                break;
+                            }
+                        }
+                    @endphp
+                    @if ($ownered)
+                        <img style='position: relative; top: -2.5px; left: -2.5px;' src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />
+                    @endif
+                @endif
             </button>
             <ul class='dropdown-menu' aria-labelledby='MenuLink-{{$stars[$i]['id']}}' id='star-{{$stars[$i]['id']}}'>
                 <li><a class='dropdown-item' onclick='changeOwner({{$stars[$i]['id']}},"")'>无</a></li>
@@ -127,33 +127,33 @@
                 @endfor
             </ul>
         @else
-{{--            @if($stars[$i]['havePlanet'] == 1)--}}
-{{--                @php--}}
-{{--                    $ownered = False;--}}
-{{--                    foreach($planets as $planet) {--}}
-{{--                        if ($stars[$i]['id'] == $planet['position']) {--}}
-{{--                            $img = $planet['type'];--}}
-{{--                            if ($planet['controller'] != '') {--}}
-{{--                                $ownered = true;--}}
-{{--                            }--}}
-{{--                            break;--}}
-{{--                        }--}}
-{{--                    }--}}
-{{--                @endphp--}}
-{{--                @if (!$ownered)--}}
-{{--                    <button type='button' class='btn btn-default'--}}
-{{--                            style='position: absolute;--}}
-{{--                            top: {{$y-20}}px; left: {{$x+13.75}}px; width: 20px;height: 20px;--}}
-{{--                            border-radius: 100%;--}}
-{{--                            background-color:hsla(0,0%,0%,0.00);--}}
-{{--                            border:none ;--}}
-{{--                            padding:0px 0px'--}}
-{{--                            id='Planet-{{$stars[$i]['id']}}' aria-expanded='false'--}}
-{{--                            data-bs-target='#star-Planet-{{$stars[$i]['id']}}'>--}}
-{{--                        <img src='storage/img/planets/{{$img}}.png' width='20px' onclick="colonize({{$planet['id']}})"/>--}}
-{{--                    </button>--}}
-{{--                @endif--}}
-{{--            @endif--}}
+            @if($stars[$i]['havePlanet'] == 1)
+                @php
+                    $ownered = False;
+                    foreach($planets as $planet) {
+                        if ($stars[$i]['id'] == $planet['position']) {
+                            $img = $planet['type'];
+                            if ($planet['controller'] != '') {
+                                $ownered = true;
+                            }
+                            break;
+                        }
+                    }
+                @endphp
+                @if (!$ownered)
+                    <button type='button' class='btn btn-default'
+                            style='position: absolute;
+                            top: {{$y-20}}px; left: {{$x+13.75}}px; width: 20px;height: 20px;
+                            border-radius: 100%;
+                            background-color:hsla(0,0%,0%,0.00);
+                            border:none ;
+                            padding:0px 0px'
+                            id='Planet-{{$stars[$i]['id']}}' aria-expanded='false'
+                            data-bs-target='#star-Planet-{{$stars[$i]['id']}}'>
+                        <img src='storage/img/planets/{{$img}}.png' width='20px' onclick="colonize({{$planet['id']}})"/>
+                    </button>
+                @endif
+            @endif
             <button type='button' class='btn btn-default'
                     style='position: absolute;
                             top: {{$y-13.75}}px; left: {{$x-13.75}}px; width: 27.5px;height: 27.5px;
@@ -162,6 +162,19 @@
                             border:none ;
                             padding:0px 0px'>
             </button>
+            @php $ownered = False;@endphp
+            @if($stars[$i]['havePlanet'] == 1)
+                @php
+                    foreach ($planets as $planet) {
+                        if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {
+                            $ownered = true;
+                            $countryImg = $planet['controller'];
+                            $planerName = $planet['name'];
+                            break;
+                        }
+                    }
+                @endphp
+            @endif
             <button type='button' class='btn btn-default'
                     style='position: absolute;
                     top: {{$y-11}}px; left: {{$x-11}}px; width: 22px;height: 22px;
@@ -175,33 +188,27 @@
                     data-bs-container ='body'
                     title={{$stars[$i]['name']}}
                               data-bs-html='true'
-                    data-bs-content='归属于{{$ownerName}},当前受控于{{$controllerName}}
-                              <p>本星系包含
+                    data-bs-content='
+                                <p>归属于{{$ownerName}},受控于{{$controllerName}}</p>
+                                <p>本星系包含
                                 @foreach($stars[$i]['resource'] as $res=>$value)
                                     @if($value == 0)
                                         @php continue;@endphp
                                     @endif
                                     <span class="badge bg-light text-dark"><img src="storage/img/resource/{{$res}}.png"/ width="20px">{{$value}}</span>
                                 @endforeach
-                              </p>' onclick="readStar({{$stars[$i]['id']}})">
+                                </p>
+                                @if ($ownered)
+                                    殖民地：<img src="storage/img/countries/{{$countryImg}}.png" width="20px" />{{$planerName}}
+                                @endif
+                                '
+                    onclick="readStar({{$stars[$i]['id']}})">
                 @if($type == 'sc_black_hole' || $type == 'sc_pulsar' || $type == 'sc_neutron_star')
-                    <img src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
+                    <img style='position: relative; top: -2.5px; left: -2.5px;' src='{{asset("storage/img/".$type.".png")}}' width='27.5px' />
                 @endif
-{{--                @if($stars[$i]['havePlanet'] == 1)--}}
-{{--                    @php--}}
-{{--                        $ownered = False;--}}
-{{--                        foreach ($planets as $planet) {--}}
-{{--                            if ($stars[$i]['id'] == $planet['position'] && $planet['controller'] != '') {--}}
-{{--                                $ownered = true;--}}
-{{--                                $countryImg = $planet['controller'];--}}
-{{--                                break;--}}
-{{--                            }--}}
-{{--                        }--}}
-{{--                    @endphp--}}
-{{--                    @if ($ownered)--}}
-{{--                        <img src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />--}}
-{{--                    @endif--}}
-{{--                @endif--}}
+                @if ($ownered)
+                    <img style='position: relative; top: -2.5px; left: -2.5px;' src='storage/img/countries/{{$countryImg}}.png' width='27.5px' />
+                @endif
             </button>
         @endif
 {{--        <button type='button' class='btn btn-default'--}}
@@ -294,7 +301,7 @@
             $stars[$i]['hyperlane'] = json_decode($stars[$i]['hyperlane'],true);
         @endphp
         ctx.lineWidth = 3;
-        ctx.strokeStyle = '#66d1ff';
+        ctx.strokeStyle = '#66CCFF';
         @foreach ($stars[$i]['hyperlane'] as $key => $value)
         ctx.beginPath();
         ctx.moveTo({{$x}}, {{$y}});
@@ -356,13 +363,13 @@
                 <div class="container my-4 py-4 rounded shadow-lg" id="planet"></div>
                 <div class="container my-4 py-4 rounded shadow-lg">
                     <div class="row">
-                        <div class="col my-4 py-4">
+                        <div class="col-3 container my-4 py-4 rounded shadow-lg">
                             <h6 class="text-center">本星系包含资源</h6>
                             <div class="container my-4">
                                 <div id="resource"></div>
                             </div>
                         </div>
-                        <div class="col my-4 py-4">
+                        <div class="col-9 container my-4 py-4 rounded shadow-lg">
                             <h6 class="text-center">本星系包含修正</h6>
                             <div class="container my-4">
                                 <div class="row" id="modifier"></div>

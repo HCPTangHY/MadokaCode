@@ -30,8 +30,8 @@ class MapController extends Controller
                 $stars[$key]['resource'] = json_decode($value['resource'], true);
             }
             $countries = Country::get()->toArray();
-//            $stations = Station::get()->toArray();
-//            $planets = Planet::get()->toArray();
+            $stations = Station::get()->toArray();
+            $planets = Planet::get()->toArray();
 //            $planetTypes = PlanetType::get()->toArray();
 //            if ($privilege <= 1) {
 //                $fleets = Fleet::get()->toArray();
@@ -41,7 +41,7 @@ class MapController extends Controller
 //                $armys = Army::where(["owner"=>$country])->get()->toArray();
 //            }
             return view("map",["stars"=>$stars,"countrys"=>$countries,
-//                "stations"=>$stations,"planets"=>$planets,
+                "stations"=>$stations,"planets"=>$planets,
 //                "planetTypes"=>$planetTypes,
 //                "fleets"=>$fleets,
 //                "armys"=>$armys,
