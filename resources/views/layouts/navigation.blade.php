@@ -28,6 +28,12 @@
                         星球
                     </x-nav-link>
                 </div>
+                <!-- Military Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('military')" :active="request()->routeIs('military')">
+                        军事
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->

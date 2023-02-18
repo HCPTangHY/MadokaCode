@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\MapController;
-use App\Http\Controllers\PlanetController;
+use App\Http\Controllers\Battle\MapController;
+use App\Http\Controllers\Battle\MilitaryController;
+use App\Http\Controllers\Battle\PlanetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,7 @@ Route::get('/dashboard', function () {
 Route::get('/map', [MapController::class,"mapPage"])->middleware(['web', 'verified'])->name('map');
 Route::get('/MapContent', [MapController::class,"getData"])->middleware(['web', 'verified'])->name('mapContent');
 Route::get('/planet',[PlanetController::class,"planetPage"])->middleware(['web', 'verified'])->name('planet');
+Route::get('/military',[MilitaryController::class,"militaryPage"])->middleware(['web','verified'])->name('military');
 
 Route::prefix("Action")->group(function () {
     Route::post('/MapData',[MapController::class,"mapData"])->middleware(['web', 'verified']);
