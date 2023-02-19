@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Battle\Battle\MapController;
-use App\Http\Controllers\Battle\Battle\MilitaryController;
-use App\Http\Controllers\Battle\Battle\PlanetController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\MilitaryController;
+use App\Http\Controllers\PlanetController;
 use Illuminate\Support\Facades\Route;
 
 /*
