@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Battle\FleetController;
 use App\Models\Fleet;
 use App\Models\Star;
 use Illuminate\Support\Facades\Auth;
