@@ -21,19 +21,26 @@ class BulletController extends Controller {
             $damageShield = 0.5;
             $damageArmor = 1.5;
             $damageHull = 1.25;
-        } elseif ($this->damageType == 'missile') {
-            $accuracy = 1;
-            $damageShield = 0;
-            $damageArmor = 1;
-            $damageHull = 1;
-        } else {
+        }
+//        elseif ($this->damageType == 'missile') {
+//            $accuracy = 1;
+//            $damageShield = 0;
+//            $damageArmor = 1;
+//            $damageHull = 1;
+//        } elseif ($this->damageType == 'torpedo') {
+//            $accuracy = 0.5;
+//            $damageShield = 0;
+//            $damageArmor = 1.5;
+//            $damageHull = 1;
+//        }
+        else {
             $accuracy = 0.75;
             $damageShield = 1.5;
             $damageArmor = 0.5;
             $damageHull = 1.;
         }
         $damageHitChance = $accuracy-$enemy->evasion;
-        if ($enemy->shield > 0 || $this->damageType == 'missile') {
+        if ($enemy->shield > 0 && $this->damageType != 'missile' && $this->damageType != 'torpedo') {
             $enemy->shield -= ($this->damage*$damageShield)*$damageHitChance;
             echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
         } else {

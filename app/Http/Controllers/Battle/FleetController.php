@@ -39,8 +39,8 @@ class FleetController extends Controller {
     public function createBullet($type): BulletController {
         return new BulletController($this, $type);
     }
-    public function createDrone(): DroneController {
-        return new DroneController($this);
+    public function createDrone($type): DroneController {
+        return new DroneController($this,$type);
     }
     public function tryToDisengage($damage) {
         $disengage = ($damage / $this->hull * 1.5 * $this->disengageChance);
