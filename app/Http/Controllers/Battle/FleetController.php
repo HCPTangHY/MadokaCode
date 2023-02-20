@@ -60,5 +60,8 @@ class FleetController extends Controller {
         Fleet::where(["id" =>$this->id])->update(["position" => $cap,"hull"=>$this->hull]);
         echo "!撤退".$this->name."撤退!";
     }
+    public function countComputerModifier() {
+
+    }
 }
 
