@@ -36,8 +36,20 @@ class FleetController extends Controller {
 //            $this->disengageChance = $f->disengageChance;
         }
     }
-    public function createBullet($type): BulletController {
-        return new BulletController($this, $type);
+    public function save() {
+        if ($this->id != -1) {
+            $f = Fleet::where(['id'=>$this->id])->first();
+            $f->ships = json_encode($this->ships,JSON_UNESCAPED_UNICODE);
+            foreach ($this as $key => $value) {
+                if ($key != 'ships' && $key != 'middleware' && $key != 'fullHull') {
+                    $f->$key = $value;
+                }
+            }
+            $f->save();
+        }
+    }
+    public function createBullet(string $type,int $target,int $creatTick): BulletController {
+        return new BulletController($this, $type, $target,$creatTick);
     }
     public function createDrone($type): DroneController {
         return new DroneController($this,$type);
@@ -62,6 +74,27 @@ class FleetController extends Controller {
     }
     public function countComputerModifier() {
 
+    }
+    public function chooseEnemy(array $fleets): int {
+        foreach ($fleets as $ally=>$fleetsInAlly) {
+            foreach ($fleetsInAlly as $fleetKey=>$fleet) {
+                if ($fleet == $this->id) {
+                    break;
+                }
+            }
+        }
+        while (true) {
+            $enemyAlly = array_rand($fleets);
+            $enemyCountry = Fleet::where(["id"=>$fleets[$enemyAlly][0]])->first()->owner;
+            $atWar = json_decode(Country::where(["tag"=>$enemyCountry])->first()->atWarWith,true);
+            if (in_array($this->owner, $atWar)) {
+                $enemy = $fleets[$enemyAlly][array_rand($fleets[$enemyAlly])];
+                break;
+            } elseif ($enemyAlly == $ally) {
+                continue;
+            }
+        }
+        return $enemy;
     }
 }
 

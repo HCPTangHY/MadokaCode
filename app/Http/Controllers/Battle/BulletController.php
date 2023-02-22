@@ -9,13 +9,26 @@ class BulletController extends Controller {
     public int $owner;
     public float $damage;
     public string $damageType;
+    public int $target;
+    public int $creatTick;
 
-    function __construct(FleetController $owner, string $damageType) {
-        $this->owner = $owner->id;
-        $this->damage = $owner->$damageType;
-        $this->damageType = $damageType;
+    function __construct(FleetController|DroneController $owner, string $damageType, int $target, int $creatTick) {
+        if ($owner instanceof FleetController) {
+            $this->owner = $owner->id;
+            $this->damage = $owner->$damageType;
+            $this->damageType = $damageType;
+            $this->target = $target;
+            $this->creatTick = $creatTick;
+        } else {
+            $this->owner = $owner->id;
+            $this->damage = $owner->droneDamage;
+            $this->damageType = $owner->type;
+            $this->target = $target;
+            $this->creatTick = $creatTick;
+        }
     }
-    public function hit(FleetController $enemy) {
+    public function hit() {
+        $enemy = new FleetController($this->target);
         if ($this->damageType == 'energy') {
             $accuracy = 0.9;
             $damageShield = 0.5;
@@ -39,7 +52,7 @@ class BulletController extends Controller {
             $damageArmor = 0.5;
             $damageHull = 1.;
         }
-        $damageHitChance = $accuracy-$enemy->evasion;
+        $damageHitChance = max(0,$accuracy-$enemy->evasion);
         if ($enemy->shield > 0 && $this->damageType != 'missile' && $this->damageType != 'torpedo') {
             $enemy->shield -= ($this->damage*$damageShield)*$damageHitChance;
             echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
@@ -63,5 +76,6 @@ class BulletController extends Controller {
                 }
             }
         }
+        $enemy->save();
     }
 }

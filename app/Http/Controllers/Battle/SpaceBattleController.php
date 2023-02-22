@@ -29,5 +29,62 @@ class SpaceBattleController extends Controller {
             }
         }
     }
+    private function createBattleQueue(): QueueController {
+        return new QueueController();
+    }
+    public function spaceBattle() {
+        $q = new QueueController();
+        foreach ($this->fleets as $ally=>$fleetsInAlly) {
+            foreach ($fleetsInAlly as $fleetKey=>$fleet) {
+                $f = new FleetController($fleet);
+                if ($f->PDamage != 0) {
+                    $enemy = $f->chooseEnemy($this->fleets);
+                    $pb = $f->createBullet('PDamage',$enemy,0);
+                    $q->InQ($pb);
+                }
+                if ($f->EDamage != 0) {
+                    $enemy = $f->chooseEnemy($this->fleets);
+                    $eb = $f->createBullet('EDamage',$enemy,0);
+                    $q->InQ($eb);
+                }
+                if ($f->MDamage != 0) {
+                    $m = $f->createDrone('missile');
+                    $q->InQ($m);
+                }
+                if ($f->drone != 0) {
+                    $d = $f->createDrone('drone');
+                    $q->InQ($d);
+                }
+            }
+        }
+        var_dump($q->queue);
+        $tick = 0;
+        while ($tick < 10) {
+            $tick++;
+            foreach ($q->queue as $key=>$data) {
+                if ($data instanceof BulletController) {
+                    if ($data->creatTick < $tick) {
+                        $data->hit();
+                        $f = new FleetController($data->owner);
+                        $enemy = $f->chooseEnemy($this->fleets);
+                        if ($data->damageType == 'PDamage') {
+                            $f->createBullet('PDamage',$enemy,$tick+2);
+                        } elseif ($data->damageType == 'EDamage') {
+                            $f->createBullet('EDamage',$enemy,$tick+5);
+                        }
+                        $q->OutQ($key);
+                    }
+                } elseif ($data instanceof DroneController) {
+                    if ($data->creatTick < $tick) {
 
+                        $enemy = $data->chooseEnemy($this->fleets);
+                        $data->createBullet($data->type,$enemy,$tick);
+                    }
+                }
+            }
+            var_dump($q->queue);
+            break;
+        }
+    }
 }
+

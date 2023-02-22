@@ -3,19 +3,48 @@
 namespace App\Http\Controllers\Battle;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
+use App\Models\Fleet;
 
 class DroneController extends Controller {
     private int $owner;
     private float $droneDamage,$droneHP,$droneEvasion,$droneSpeed;
-    private string $type;
+    public string $type;
+    public int $creatTick;
 
-    public function __construct(FleetController $owner,$type) {
+    public function __construct(FleetController $owner,string $type, int $creatTick) {
         $this->owner = $owner->id;
         $this->type = $type;
         $this->droneDamage = $owner->droneDamage;
         $this->droneHP = $owner->droneHP;
         $this->droneEvasion = $owner->droneEvasion;
         $this->droneSpeed = $owner->droneSpeed;
+        $this->creatTick = $creatTick;
+    }
+    public function chooseEnemy(array $fleets): int {
+        foreach ($fleets as $ally=>$fleetsInAlly) {
+            foreach ($fleetsInAlly as $fleetKey=>$fleet) {
+                if ($fleet == $this->owner) {
+                    break;
+                }
+            }
+        }
+        while (true) {
+            $enemyAlly = array_rand($fleets);
+            $enemyCountry = Fleet::where(["id"=>$fleets[$enemyAlly][0]])->first()->owner;
+            $ownerCountry = Fleet::where(["id"=>$this->owner])->first()->owner;
+            $atWar = json_decode(Country::where(["tag"=>$enemyCountry])->first()->atWarWith,true);
+            if (in_array($ownerCountry, $atWar)) {
+                $enemy = $fleets[$enemyAlly][array_rand($fleets[$enemyAlly])];
+                break;
+            } elseif ($enemyAlly == $ally) {
+                continue;
+            }
+        }
+        return $enemy;
+    }
+    public function createBullet(string $type,int $target,int $creatTick): BulletController {
+        return new BulletController($this, $type, $target,$creatTick);
     }
     public function hitFleet(FleetController $enemy) {
         $damageHitChance = 1-$enemy->evasion;
