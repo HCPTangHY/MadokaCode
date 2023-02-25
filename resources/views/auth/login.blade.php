@@ -42,6 +42,10 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 m-4" href="{{ route('register') }}">
+                    {{ __('注册') }}
+                </a>
+
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                         {{ __('忘记密码?') }}
@@ -51,6 +55,7 @@
                 <x-primary-button class="ml-3">
                     {{ __('登录') }}
                 </x-primary-button>
+
             </div>
         </form>
     </x-auth-card>

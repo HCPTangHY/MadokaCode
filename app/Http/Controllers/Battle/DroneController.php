@@ -43,8 +43,8 @@ class DroneController extends Controller {
         }
         return $enemy;
     }
-    public function createBullet(string $type,int $target,int $creatTick): BulletController {
-        return new BulletController($this, $type, $target,$creatTick);
+    public function createBullet(string $type,int $target,int $creatTick,QueueController $queue): BulletController {
+        return new BulletController($this, $type, $target,$creatTick,$queue);
     }
     public function hitFleet(FleetController $enemy) {
         $damageHitChance = 1-$enemy->evasion;

@@ -12,22 +12,20 @@ class BulletController extends Controller {
     public int $target;
     public int $creatTick;
 
-    function __construct(FleetController|DroneController $owner, string $damageType, int $target, int $creatTick) {
+    function __construct(FleetController|DroneController $owner, string $damageType, int $target, int $creatTick, QueueController $queue) {
+        $this->owner = $owner->id;
         if ($owner instanceof FleetController) {
-            $this->owner = $owner->id;
             $this->damage = $owner->$damageType;
             $this->damageType = $damageType;
-            $this->target = $target;
-            $this->creatTick = $creatTick;
         } else {
-            $this->owner = $owner->id;
             $this->damage = $owner->droneDamage;
             $this->damageType = $owner->type;
-            $this->target = $target;
-            $this->creatTick = $creatTick;
         }
+        $this->target = $target;
+        $this->creatTick = $creatTick;
+        $queue->InQ($this);
     }
-    public function hit() {
+    public function hit(Array $fleets) {
         $enemy = new FleetController($this->target);
         if ($this->damageType == 'energy') {
             $accuracy = 0.9;
@@ -62,17 +60,21 @@ class BulletController extends Controller {
                 echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
             } else {
                 if ($enemy->hull > 0) {
+                    $damage = ($this->damage * $damageHull) * $damageHitChance;
                     if ($enemy->hull <= 0.5 * $enemy->fullHull) {
-                        $damage = ($this->damage * $damageHull) * $damageHitChance;
+                        echo $damage;
                         if ($enemy->tryToDisengage($damage)) {
-                            $enemy->disengage();
+                            $enemy->disengage($fleets);
                         } else {
                             $enemy->hull -= $damage;
                             echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
                         }
+                    } else {
+                        $enemy->hull -= $damage;
+                        echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
                     }
                 } else {
-                    $enemy->disengage();
+                    $enemy->disengage($fleets);
                 }
             }
         }

@@ -24,7 +24,6 @@ class QueueController extends Controller {
     public function InQ($data){
         $this->queue[$this->rear]=$data;
         $this->rear++;
-        echo '入队成功！<br>';
     }
     //出队
     public function OutQ($key){
@@ -32,7 +31,6 @@ class QueueController extends Controller {
         else{
             array_splice($this->queue,$key,1);
 //            $this->front++;
-            echo "出队成功！<br>";
         }
     }
 }

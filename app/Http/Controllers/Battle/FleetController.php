@@ -41,15 +41,15 @@ class FleetController extends Controller {
             $f = Fleet::where(['id'=>$this->id])->first();
             $f->ships = json_encode($this->ships,JSON_UNESCAPED_UNICODE);
             foreach ($this as $key => $value) {
-                if ($key != 'ships' && $key != 'middleware' && $key != 'fullHull') {
+                if ($key != 'ships' && $key != 'middleware' && $key != 'fullHull' && $key != 'position') {
                     $f->$key = $value;
                 }
             }
             $f->save();
         }
     }
-    public function createBullet(string $type,int $target,int $creatTick): BulletController {
-        return new BulletController($this, $type, $target,$creatTick);
+    public function createBullet(string $type,int $target,int $creatTick,QueueController $queue): BulletController {
+        return new BulletController($this, $type, $target,$creatTick,$queue);
     }
     public function createDrone($type): DroneController {
         return new DroneController($this,$type);
@@ -67,9 +67,10 @@ class FleetController extends Controller {
         }
     }
     public function disengage() {
-        $owner = Fleet::where(["id"=>$this->id])->first()->owner;
-        $cap = Country::where(["tag" => $owner])->first()->capital;
-        Fleet::where(["id" =>$this->id])->update(["position" => $cap,"hull"=>$this->hull]);
+        $f = Fleet::where(["id" =>$this->id])->first();
+        $cap = Country::where(["tag" => $f->owner])->first()->capital;
+        $f->position = intval($cap);
+        $f->save();
         echo "!撤退".$this->name."撤退!";
     }
     public function countComputerModifier() {
