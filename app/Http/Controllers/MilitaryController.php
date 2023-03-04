@@ -25,5 +25,5 @@ class MilitaryController extends Controller {
             "fleets"=>$fleets]);
     }
 }
-$s = new SpaceBattleController([27,38]);
+$s = new SpaceBattleController([38,39]);
 $s->spaceBattle();

@@ -25,7 +25,7 @@ class BulletController extends Controller {
         $this->creatTick = $creatTick;
         $queue->InQ($this);
     }
-    public function hit(Array $fleets) {
+    public function hit() {
         $enemy = new FleetController($this->target);
         if ($this->damageType == 'energy') {
             $accuracy = 0.9;
@@ -64,7 +64,7 @@ class BulletController extends Controller {
                     if ($enemy->hull <= 0.5 * $enemy->fullHull) {
                         echo $damage;
                         if ($enemy->tryToDisengage($damage)) {
-                            $enemy->disengage($fleets);
+                            $enemy->disengage();
                         } else {
                             $enemy->hull -= $damage;
                             echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
@@ -74,7 +74,7 @@ class BulletController extends Controller {
                         echo $enemy->name, '|', $enemy->shield, '|', $enemy->armor, '|', $enemy->hull, "<br>";
                     }
                 } else {
-                    $enemy->disengage($fleets);
+                    $enemy->disengage();
                 }
             }
         }
